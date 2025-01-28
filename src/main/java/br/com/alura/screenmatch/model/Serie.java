@@ -1,5 +1,6 @@
 package br.com.alura.screenmatch.model;
 
+import br.com.alura.screenmatch.service.ConsultaGemini;
 import com.fasterxml.jackson.annotation.JsonAlias;
 
 import java.util.OptionalDouble;
@@ -72,15 +73,25 @@ public class Serie {
 
     @Override
     public String toString() {
-        return
-                "genero=" + genero +
-                ", titulo='" + titulo + '\'' +
-                ", totalTemporadas=" + totalTemporadas +
-                ", avaliacao=" + avaliacao +
-                ", atores='" + atores + '\'' +
-                ", poster='" + poster + '\'' +
-                ", sinopse='" + sinopse + '\'';
+        return """
+            Título: %s
+            Gênero: %s
+            Total de Temporadas: %d
+            Avaliação: %.1f
+            Atores: %s
+            Poster: %s
+            Sinopse (traduzida): %s
+            """.formatted(
+                titulo,
+                genero,
+                totalTemporadas,
+                avaliacao,
+                atores,
+                poster,
+                sinopse
+        );
     }
+
 
     public Serie(DadosSerie dadosSerie){
         this.titulo = dadosSerie.titulo();
@@ -89,7 +100,7 @@ public class Serie {
         this.genero = Categoria.fromString(dadosSerie.genero().split(",")[0].trim());
         this.atores = dadosSerie.atores();
         this.poster = dadosSerie.poster();
-        this.sinopse = dadosSerie.sinopse();
+        this.sinopse = ConsultaGemini.obterTraducao(dadosSerie.sinopse().trim());
 
     }
 }
