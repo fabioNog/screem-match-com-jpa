@@ -1,20 +1,61 @@
 package br.com.alura.screenmatch.model;
 
+import br.com.alura.screenmatch.repository.SerieRepository;
 import br.com.alura.screenmatch.service.ConsultaGemini;
-import com.fasterxml.jackson.annotation.JsonAlias;
+import jakarta.persistence.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.OptionalDouble;
 
-
+@Entity
+@Table(name = "series")
 public class Serie {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true)
     private String titulo;
+
     private Integer totalTemporadas;
     private Double avaliacao;
+
+    @Enumerated(EnumType.STRING)
     private Categoria genero;
+
     private String atores;
     private String poster;
     private String sinopse;
+
+    @Transient
+    private List<Episodio> episodios = new ArrayList<>();
+    
+
+    // Construtor padrão
+    public Serie() {}
+
+    // Construtor baseado em DadosSerie
+    public Serie(DadosSerie dadosSerie) {
+        this.titulo = dadosSerie.titulo();
+        this.totalTemporadas = dadosSerie.totalTemporadas();
+        this.avaliacao = OptionalDouble.of(Double.parseDouble(dadosSerie.avaliacao())).orElse(0);
+        this.genero = Categoria.fromString(dadosSerie.genero().split(",")[0].trim());
+        this.atores = dadosSerie.atores();
+        this.poster = dadosSerie.poster();
+        this.sinopse = ConsultaGemini.obterTraducao(dadosSerie.sinopse().trim());
+    }
+
+    // Getters e Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getTitulo() {
         return titulo;
@@ -72,6 +113,14 @@ public class Serie {
         this.sinopse = sinopse;
     }
 
+    public List<Episodio> getEpisodios() {
+        return episodios;
+    }
+
+    public void setEpisodios(List<Episodio> episodios) {
+        this.episodios = episodios;
+    }
+
     @Override
     public String toString() {
         return """
@@ -83,25 +132,7 @@ public class Serie {
             Poster: %s
             Sinopse (traduzida): %s
             """.formatted(
-                titulo,
-                genero,
-                totalTemporadas,
-                avaliacao,
-                atores,
-                poster,
-                sinopse
+                titulo, genero, totalTemporadas, avaliacao, atores, poster, sinopse
         );
-    }
-
-
-    public Serie(DadosSerie dadosSerie){
-        this.titulo = dadosSerie.titulo();
-        this.totalTemporadas = dadosSerie.totalTemporadas();
-        this.avaliacao = OptionalDouble.of(Double.valueOf(dadosSerie.avaliacao())).orElse(0);
-        this.genero = Categoria.fromString(dadosSerie.genero().split(",")[0].trim());
-        this.atores = dadosSerie.atores();
-        this.poster = dadosSerie.poster();
-        this.sinopse = ConsultaGemini.obterTraducao(dadosSerie.sinopse().trim());
-
     }
 }
