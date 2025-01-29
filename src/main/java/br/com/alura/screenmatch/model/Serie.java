@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 
 import java.util.OptionalDouble;
 
+
 public class Serie {
 
     private String titulo;
