@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalDouble;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "series")
@@ -30,9 +31,9 @@ public class Serie {
     private String poster;
     private String sinopse;
 
-    @Transient
+    @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Episodio> episodios = new ArrayList<>();
-    
+
 
     // Construtor padrão
     public Serie() {}
@@ -118,21 +119,29 @@ public class Serie {
     }
 
     public void setEpisodios(List<Episodio> episodios) {
+        episodios.forEach(e -> e.setSerie(this));
         this.episodios = episodios;
     }
 
     @Override
     public String toString() {
+        String episodiosFormatados = episodios.stream()
+                .map(e -> "Temporada " + e.getTemporada() + ", Episódio " + e.getNumeroEpisodio() + ": " + e.getTitulo())
+                .collect(Collectors.joining("\n    ")); // Junta os episódios com quebra de linha
+
         return """
-            Título: %s
-            Gênero: %s
-            Total de Temporadas: %d
-            Avaliação: %.1f
-            Atores: %s
-            Poster: %s
-            Sinopse (traduzida): %s
-            """.formatted(
-                titulo, genero, totalTemporadas, avaliacao, atores, poster, sinopse
+        Título: %s
+        Gênero: %s
+        Total de Temporadas: %d
+        Avaliação: %.1f
+        Atores: %s
+        Poster: %s
+        Sinopse (traduzida): %s
+        Episódios: 
+        %s
+        """.formatted(
+                titulo, genero, totalTemporadas, avaliacao, atores, poster, sinopse, episodiosFormatados.isEmpty() ? "Nenhum episódio cadastrado." : episodiosFormatados
         );
     }
+
 }
