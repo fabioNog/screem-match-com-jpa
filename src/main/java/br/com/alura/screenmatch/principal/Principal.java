@@ -39,6 +39,7 @@ public class Principal {
                 1 - Buscar séries
                 2 - Buscar episódios
                 3-  Listar Series Buscadas
+                4 - Buscar Série por Título
                 0 - Sair                                 
                 """;
 
@@ -56,6 +57,9 @@ public class Principal {
                 case 3:
                     listarSeriesBuscadas();
                     break;
+              /*  case 4:
+                    buscarSeriePorTitulo();
+                    break;*/
                 case 0:
                     System.out.println("Saindo...");
                     break;
@@ -124,25 +128,59 @@ public class Principal {
         }
     }
 
-    /*private void listarSeriesBuscadas(){
-        *//*List<Serie> series = new ArrayList<>();
+    private void listarSeriesBuscadas(){
+        List<Serie> series = new ArrayList<>();
 
         series = dadosSeries.stream()
                 .map(d -> new Serie(d))
-                .collect(Collectors.toList());*//*
+                .collect(Collectors.toList());
 
         series = repositorio.findAll();
 
         series.stream()
                 .sorted(Comparator.comparing(Serie::getGenero))
                 .forEach(System.out::println);
-    }*/
+    }
 
-    private void listarSeriesBuscadas() {
+  /*  private void listarSeriesBuscadas() {
         series = repositorio.findAll(); // Isso busca as séries, mas os episódios não são carregados
         series.forEach(serie -> {
             Serie serieComEpisodios = repositorio.findByIdWithEpisodes(serie.getId()).orElse(serie);
             System.out.println(serieComEpisodios);
         });
+    }*/
+
+/*
+    private void buscarSeriePorTitulo() {
+        System.out.println("Digite parte do nome da série para busca:");
+        var nomeSerie = leitura.nextLine();
+
+        List<Serie> seriesEncontradas = repositorio.findByTituloContainingIgnoreCaseWithEpisodes(nomeSerie);
+
+        if (seriesEncontradas.isEmpty()) {
+            System.out.println("Nenhuma série encontrada com esse nome.");
+        } else {
+            seriesEncontradas.forEach(serie -> {
+                System.out.println("Série: " + serie.getTitulo());
+                System.out.println("Gênero: " + serie.getGenero());
+                System.out.println("Avaliação: " + serie.getAvaliacao());
+                System.out.println("Total de Temporadas: " + serie.getTotalTemporadas());
+
+                if (serie.getEpisodios() != null && !serie.getEpisodios().isEmpty()) {
+                    System.out.println("Episódios:");
+                    serie.getEpisodios().forEach(ep ->
+                            System.out.println("Temporada " + ep.getTemporada() + " - Episódio " + ep.getNumeroEpisodio() + ": " + ep.getTitulo())
+                    );
+                } else {
+                    System.out.println("Nenhum episódio encontrado.");
+                }
+
+                System.out.println("--------------------------");
+            });
+        }
     }
+*/
+
+
+
 }

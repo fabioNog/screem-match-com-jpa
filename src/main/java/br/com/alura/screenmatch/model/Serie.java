@@ -31,7 +31,7 @@ public class Serie {
     private String poster;
     private String sinopse;
 
-    @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
     private List<Episodio> episodios = new ArrayList<>();
 
 
@@ -125,9 +125,22 @@ public class Serie {
 
     @Override
     public String toString() {
-        String episodiosFormatados = episodios.stream()
+        return
+            "genero=" + genero +
+            ", titulo='" + titulo + '\'' +
+            ", totalTemporadas=" + totalTemporadas +
+            ", avaliacao=" + avaliacao +
+            ", atores='" + atores + '\'' +
+            ", poster='" + poster + '\'' +
+            ", sinopse='" + sinopse + '\'' +
+            ", episodios='" + episodios + '\'';
+    }
+
+   /* @Override
+    public String toString() {
+      *//*  String episodiosFormatados = episodios.stream()
                 .map(e -> "Temporada " + e.getTemporada() + ", Episódio " + e.getNumeroEpisodio() + ": " + e.getTitulo())
-                .collect(Collectors.joining("\n    ")); // Junta os episódios com quebra de linha
+                .collect(Collectors.joining("\n    "));*//* // Junta os episódios com quebra de linha
 
         return """
         Título: %s
@@ -140,8 +153,8 @@ public class Serie {
         Episódios: 
         %s
         """.formatted(
-                titulo, genero, totalTemporadas, avaliacao, atores, poster, sinopse, episodiosFormatados.isEmpty() ? "Nenhum episódio cadastrado." : episodiosFormatados
+                titulo, genero, totalTemporadas, avaliacao, atores, poster, sinopse, episodios ? "Nenhum episódio cadastrado." : "episodiosFormatados"
         );
-    }
+    }*/
 
 }
