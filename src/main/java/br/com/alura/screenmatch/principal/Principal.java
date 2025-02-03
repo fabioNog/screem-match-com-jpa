@@ -1,9 +1,6 @@
 package br.com.alura.screenmatch.principal;
 
-import br.com.alura.screenmatch.model.DadosSerie;
-import br.com.alura.screenmatch.model.DadosTemporada;
-import br.com.alura.screenmatch.model.Episodio;
-import br.com.alura.screenmatch.model.Serie;
+import br.com.alura.screenmatch.model.*;
 import br.com.alura.screenmatch.repository.SerieRepository;
 import br.com.alura.screenmatch.service.ConsumoApi;
 import br.com.alura.screenmatch.service.ConverteDados;
@@ -41,6 +38,7 @@ public class Principal {
                 4 - Buscar Série por Título
                 5 - Buscar Séries por Ator
                 6 - Top 5 Séries
+                7 - Buscar Series por Categoria
                 0 - Sair                                 
                 """;
 
@@ -67,6 +65,9 @@ public class Principal {
                 case 6:
                     buscarTop5Series();
                     break;
+                case 7:
+                    buscarSeriesPorCategoria();
+                    break;
                 case 0:
                     System.out.println("Saindo...");
                     break;
@@ -75,6 +76,25 @@ public class Principal {
             }
         }
 
+    }
+
+    private void buscarSeriesPorCategoria() {
+        System.out.println("Deseja buscar séries de que categoria/gênero? ");
+        String nomeGenero = leitura.nextLine().trim();
+
+        try {
+            Categoria categoria = Categoria.fromPortugues(nomeGenero);
+            List<Serie> seriesPorCategoria = repositorio.findByGenero(categoria);
+
+            if (seriesPorCategoria.isEmpty()) {
+                System.out.println("Nenhuma série encontrada para essa categoria.");
+            } else {
+                System.out.println("Séries da categoria " + categoria.name() + ":");
+                seriesPorCategoria.forEach(System.out::println);
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Categoria inválida! Verifique a ortografia e tente novamente.");
+        }
     }
 
     private void buscarTop5Series() {
