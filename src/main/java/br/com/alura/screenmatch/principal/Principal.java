@@ -61,8 +61,11 @@ public class Principal {
                 case 4:
                     buscarSeriePorTitulo();
                     break;
-                    case 5:
+                case 5:
                     buscarSeriePorAtor();
+                break;
+                case 6:
+                    buscarTop5Series();
                     break;
                 case 0:
                     System.out.println("Saindo...");
@@ -72,6 +75,11 @@ public class Principal {
             }
         }
 
+    }
+
+    private void buscarTop5Series() {
+        List<Serie> serieTop = repositorio.findTop5ByOrderByAvaliacaoDesc();
+        serieTop.forEach(s -> System.out.println(s.getTitulo() + " avaliacao " + s.getAvaliacao() ));
     }
 
     private void buscarSeriePorAtor() {
